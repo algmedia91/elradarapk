@@ -29,15 +29,19 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Instalar Android SDK en el servidor de GitHub
+            - name: Instalar Android SDK en GitHub
         uses: android-actions/setup-android@v3
 
-      - name: Instalar herramientas Android necesarias
+      - name: Instalar plataforma y herramientas Android
+        shell: bash
         run: |
-          set +o pipefail
-          yes | sdkmanager --licenses
-          set -o pipefail
-          sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+          set -e
+          sdkmanager --version
+          yes | sdkmanager --licenses || true
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0"
 
       - name: Comprobar que la PWA de El Radar está publicada
         shell: bash
