@@ -1,0 +1,40 @@
+{
+  "packageId": "com.algmedia91.elradar",
+  "host": "elradar.infinityfree.io",
+  "name": "El Radar - Transporte",
+  "launcherName": "El Radar",
+  "display": "standalone",
+  "themeColor": "#172554",
+  "themeColorDark": "#172554",
+  "navigationColor": "#172554",
+  "navigationColorDark": "#172554",
+  "navigationDividerColor": "#00000000",
+  "navigationDividerColorDark": "#00000000",
+  "backgroundColor": "#f4f6fb",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://elradar.infinityfree.io/index.php?radar_icon=512",
+  "maskableIconUrl": "https://elradar.infinityfree.io/index.php?radar_icon=512",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionCode": 35,
+  "appVersion": "35",
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://elradar.infinityfree.io/index.php?radar_manifest=1",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "minSdkVersion": 21,
+  "orientation": "any",
+  "fingerprints": [],
+  "additionalTrustedOrigins": []
+}

@@ -1,0 +1,117 @@
+EL RADAR 35 — COMPILACIÓN DE APK EN GITHUB ACTIONS
+=================================================
+
+OBJETIVO
+--------
+Este proyecto permite compilar El Radar como APK usando Bubblewrap en los
+servidores de GitHub Actions. NO instala Android SDK ni Android Studio en tu PC.
+
+La aplicación Android será una Trusted Web Activity (TWA) que abre la web
+https://elradar.infinityfree.io. El APK no contiene la aplicación PHP: carga
+la versión que esté publicada en ese dominio.
+
+INCLUYE
+-------
+- twa-manifest.json: configuración TWA para com.algmedia91.elradar.
+- .github/workflows/build-apk.yml: flujo automático de compilación.
+- SUBIR_A_HOSTING_VERSION_35/: archivos recibidos en 35(1).zip para subir
+  manualmente al hosting si todavía no has publicado esa versión.
+
+ANTES DE COMPILAR
+-----------------
+1. Comprueba que el dominio https://elradar.infinityfree.io es tu dominio
+   definitivo. El package ID está configurado como com.algmedia91.elradar,
+   que corresponde al identificador usado en el APK anterior.
+2. Sube SUBIR_A_HOSTING_VERSION_35/index.php, icon-192.png e icon-512.png
+   al directorio raíz del hosting, sustituyendo los archivos anteriores
+   después de guardar una copia de seguridad.
+3. Conserva también .radar_macro_config.php si tu instalación utiliza
+   la integración MacroDroid. No publiques ese archivo en un repositorio
+   público: contiene un hash de token.
+4. Verifica en el navegador estas direcciones:
+   https://elradar.infinityfree.io/index.php?radar_manifest=1
+   https://elradar.infinityfree.io/index.php?radar_sw=1
+   https://elradar.infinityfree.io/index.php?radar_icon=512
+
+SUBIR A GITHUB
+--------------
+1. Entra en https://github.com y crea un repositorio PRIVADO nuevo.
+2. Descomprime este ZIP.
+3. Sube el contenido completo de la carpeta ElRadar_GitHubActions_35
+   al repositorio. Mantén la carpeta .github (puede estar oculta en Windows).
+4. En GitHub abre la pestaña Actions y habilita los workflows si GitHub
+   lo solicita.
+5. Selecciona "Compilar APK de El Radar" y pulsa "Run workflow".
+6. Espera a que termine la ejecución.
+7. En el resumen de la ejecución descarga el artefacto
+   "El-Radar-35-APK-y-configuracion".
+8. Dentro encontrarás El-Radar-35.apk, El-Radar-35.aab,
+   assetlinks.json y android.keystore.
+
+FIRMA DE LA APLICACIÓN — MUY IMPORTANTE
+---------------------------------------
+La primera compilación crea una clave de PRUEBA con contraseña "android".
+Sirve para instalar y probar el APK, NO es una clave de publicación segura.
+
+Guarda el archivo android.keystore descargado en un lugar seguro. No lo pierdas
+ni lo publiques. Si se pierde, no podrás firmar actualizaciones compatibles
+con esa instalación.
+
+Para que las siguientes compilaciones utilicen la MISMA clave:
+1. En Windows abre PowerShell en la carpeta donde guardaste android.keystore.
+2. Ejecuta:
+   [Convert]::ToBase64String([IO.File]::ReadAllBytes(".\android.keystore"))
+3. Copia el texto completo que aparece.
+4. En GitHub abre Settings > Secrets and variables > Actions.
+5. Crea estos Repository secrets:
+   ANDROID_KEYSTORE_BASE64 = el texto Base64 copiado
+   ANDROID_KEYSTORE_PASSWORD = android
+   ANDROID_KEY_PASSWORD = android
+
+En futuras ejecuciones se reutilizará esa clave. No cambies ni elimines esos
+secrets. Para una versión de producción conviene crear una clave privada
+propia y reemplazar la clave de prueba antes de distribuir ampliamente.
+
+PUBLICAR assetlinks.json
+------------------------
+El APK puede instalarse aunque todavía no esté verificado como TWA a pantalla
+completa. Para quitar la barra del navegador y validar el dominio, sube el
+archivo assetlinks.json generado en el artefacto a:
+
+  /.well-known/assetlinks.json
+
+Ruta final:
+  https://elradar.infinityfree.io/.well-known/assetlinks.json
+
+Crea la carpeta .well-known si no existe. El archivo debe responder con HTTP
+200 y JSON, no con una página HTML del hosting. No inventes ni reutilices una
+huella anterior: usa la del assetlinks.json de la compilación cuya clave
+vas a conservar.
+
+NOTIFICACIONES
+--------------
+La configuración TWA habilita la delegación de notificaciones Android
+(enableNotifications=true). La web versión 35 conserva su sistema Web Push
+propio mediante VAPID, PHP y Service Worker. No se añade Firebase SDK ni
+OneSignal al proyecto.
+
+La recepción con la aplicación cerrada depende de:
+- que la versión 35 esté publicada por HTTPS;
+- que el usuario acepte las notificaciones;
+- que la suscripción Push quede registrada en NOTIFICACIONES_PUSH;
+- que el servidor PHP pueda enviar las peticiones Web Push;
+- que Chrome/Android y el fabricante permitan la entrega en segundo plano.
+
+Este paquete no puede garantizar la entrega en todos los dispositivos ni
+eliminar la infraestructura de entrega Push del navegador. No usa Firebase
+SDK ni OneSignal.
+
+IMPORTANTE SOBRE EL DOMINIO
+--------------------------
+Bubblewrap TWA utiliza Chrome/Android para mostrar la web. Si el dominio no
+está validado con assetlinks.json, puede abrirse como una pestaña personalizada
+con elementos del navegador, en lugar de pantalla completa.
+
+El APK apunta a la web publicada; no copia ni aloja la base de datos PHP.
+No subas el contenido PHP a un repositorio público porque incluye claves
+privadas VAPID y configuración sensible.
