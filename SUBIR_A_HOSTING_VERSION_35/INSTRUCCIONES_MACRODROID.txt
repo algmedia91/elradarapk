@@ -1,0 +1,40 @@
+EL RADAR - INTEGRACION MACRODROID / TRANSFERMOVIL
+
+ARCHIVOS
+- index.php: versión con endpoint macro_transfer_import.
+- .radar_macro_config.php: almacena únicamente el hash de la clave API.
+- icon-192.png e icon-512.png: iconos actuales de la PWA.
+
+INSTALACION
+1. Haz una copia de seguridad del index.php que está actualmente en el hosting.
+2. Sube index.php y .radar_macro_config.php a la misma carpeta donde está el index.php actual, reemplazándolo.
+3. Conserva los iconos existentes; si los subes, reemplázalos solo por los incluidos en este paquete.
+4. El endpoint es: https://elradar.infinityfree.io/index.php?action=macro_transfer_import
+   Si tu dominio real es diferente, usa el dominio real de tu sitio.
+5. La clave API se entrega aparte en la conversación. No la publiques ni la pongas en una página web.
+
+JSON QUE DEBE ENVIAR MACRODROID
+{
+  "id_transferencia": "123456789",
+  "importe": "250.00",
+  "fecha": "2026-11-04 14:30:00"
+}
+
+La fecha es opcional; si el SMS no contiene fecha/hora fiable, puede omitirse y el servidor usará la hora de recepción. El importe debe ser decimal con punto y sin separador de miles.
+
+CONFIGURACION DE MACRODROID
+A. Crear macro.
+B. Disparador: SMS recibido. Seleccionar Transfermóvil como remitente si el remitente es estable; de lo contrario, filtrar por una frase inequívoca del cuerpo del SMS.
+C. Añadir una condición para procesar solo SMS que indiquen una transferencia recibida/confirmada. No procesar SMS de transferencia enviada, fallida o cancelada.
+D. Crear variables locales de texto: ID_TRANSFERENCIA, IMPORTE y FECHA_TRANSFERENCIA. Extraerlas del cuerpo del SMS con acciones de manipulación de texto/expresión regular. Las expresiones exactas dependen del formato real del SMS; no inventarlas.
+E. Normalizar IMPORTE: quitar espacios y separadores de miles; cambiar coma decimal por punto. Ejemplo: 1 250,00 -> 1250.00.
+F. Acción HTTP Request / Solicitud HTTP: POST, URL indicada arriba, Content-Type application/json, header X-Radar-Token con la clave entregada aparte. Body JSON con las variables extraídas.
+G. Revisar la respuesta: ok=true y duplicada=false significa registro nuevo; duplicada=true significa que ya existía y no se duplicó. Los errores 401 indican clave incorrecta; 422 indica datos extraídos incorrectamente.
+
+IMPORTANTE
+- El SMS solo sirve como aviso; no es prueba bancaria infalible. La integración registra como pendiente y NO acredita saldo automáticamente.
+- La cuenta de El Radar conserva el flujo actual: el usuario introduce el ID y el sistema asigna la transferencia una sola vez.
+- La API no acepta credenciales MySQL desde MacroDroid. La conexión MySQL permanece en PHP.
+- No se almacena el texto completo del SMS; solo se conserva una huella SHA-256 para auditoría básica.
+- Antes de activar el envío automático, prueba con una transferencia real pequeña y verifica Administración > Finanzas > Transferencias pendientes.
+- Si el SMS incluye datos sensibles, evita capturas públicas y oculta nombres, teléfonos, saldos y números de cuenta.
