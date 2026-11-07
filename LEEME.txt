@@ -1,0 +1,7 @@
+EL RADAR — PANTALLA DE INSTALACIÓN PWA
+
+Al abrir la web en un navegador normal se muestra únicamente el icono de El Radar y el botón INSTALAR. Al pulsarlo, si Chrome ha reconocido la PWA y ha enviado beforeinstallprompt, se abre el diálogo nativo de instalación. Una vez instalada y abierta desde su icono, la app entra directamente a la interfaz completa.
+
+SUBIDA: haz copia de seguridad y reemplaza index.php. Mantén icon-192.png e icon-512.png en la raíz del sitio.
+
+IMPORTANTE: Chrome solo permite abrir su diálogo nativo si el sitio cumple los requisitos PWA y el navegador dispara beforeinstallprompt. Si no lo dispara, el botón mostrará un aviso; una página web no puede forzar ese diálogo.

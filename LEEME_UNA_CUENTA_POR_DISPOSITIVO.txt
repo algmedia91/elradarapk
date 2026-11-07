@@ -1,0 +1,20 @@
+EL RADAR — UNA CUENTA POR DISPOSITIVO
+
+Esta actualización:
+- Genera un identificador aleatorio persistente en el almacenamiento local del navegador/PWA.
+- Envía el identificador durante el registro.
+- Guarda en MySQL únicamente el SHA-256 del identificador, no el identificador original.
+- Crea automáticamente la tabla RADAR_DISPOSITIVOS_REGISTRO si no existe.
+- Rechaza un segundo registro desde el mismo perfil/instalación y recomienda iniciar sesión con la cuenta existente.
+- Cuando una cuenta preexistente inicia sesión después de la actualización, asocia esa instalación a esa cuenta (si aún no estaba asociada), para que el siguiente registro quede bloqueado.
+- Usa una clave UNIQUE en MySQL para evitar registros simultáneos duplicados.
+
+INSTALACIÓN:
+1. Haz copia de seguridad de htdocs.
+2. Sube el index.php incluido reemplazando el actual.
+3. Conserva sin cambios .radar_db_config.php y .radar_macro_config.php.
+4. No vuelvas a importar ni borrar las tablas de usuarios.
+5. Abre la app y prueba el registro. La tabla RADAR_DISPOSITIVOS_REGISTRO se crea automáticamente con el primer intento.
+
+LIMITACIÓN IMPORTANTE:
+Los navegadores no ofrecen un identificador físico fiable del teléfono. Esta protección identifica la instalación/perfil del navegador mediante un token persistente. Si el usuario borra los datos del sitio, cambia de navegador/perfil o reinstala de una forma que borre el almacenamiento, podría obtener otro identificador. Para impedirlo de forma estricta a nivel de hardware se requiere una aplicación nativa con atestación del dispositivo o un control adicional por identidad/teléfono. No bloquea a usuarios que ya tengan cuentas existentes, salvo que su instalación quede asociada mediante un mecanismo adicional; las instalaciones existentes se van asociando cuando sus usuarios inician sesión tras esta actualización; hasta que eso ocurra, el servidor no puede saber qué cuenta antigua pertenece a qué dispositivo.

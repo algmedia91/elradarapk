@@ -1,0 +1,30 @@
+{
+  "id": "./",
+  "name": "El Radar - Transporte",
+  "short_name": "El Radar",
+  "description": "Aplicación de transporte, solicitudes de viaje y notificaciones.",
+  "start_url": "./index.php",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "orientation": "any",
+  "background_color": "#f4f6fb",
+  "theme_color": "#172554",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

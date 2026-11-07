@@ -1,0 +1,33 @@
+EL RADAR — INSTALACIÓN BASADA EN LA VERSIÓN ESTABLE ANTERIOR
+
+Esta actualización conserva el código funcional de la versión actual de El Radar y recupera
+el mecanismo de registro del Service Worker de la versión anterior que utilizaba correctamente
+la instalación de la PWA.
+
+MECANISMO RECUPERADO
+- El navegador registra el Service Worker servido por PHP mediante:
+  ./index.php?radar_sw=1
+- Se conserva el alcance relativo ./ y las cabeceras JavaScript/Service-Worker-Allowed
+  que devuelve el endpoint PHP.
+- Se conserva la captura temprana de beforeinstallprompt y appinstalled.
+- Se conserva el manifiesto dinámico y los iconos de la versión estable.
+- Se conserva el flujo visual de instalación de la versión estable anterior.
+
+IMPORTANTE
+- El registro del Service Worker requiere HTTPS (excepto localhost).
+- El navegador decide cuándo ofrece la instalación; una página no puede forzar el diálogo nativo.
+- El archivo sw.js se incluye como referencia de la adaptación previa, pero el registro activo
+  recuperado de la versión estable utiliza ./index.php?radar_sw=1.
+- No se ha modificado manifest.json ni el contenido de las claves/configuraciones privadas.
+
+SUBIDA
+1. Haz una copia de seguridad del directorio actual.
+2. Sube y reemplaza index.php y los archivos públicos del paquete.
+3. Conserva tu configuración privada .radar_db_config.php y .radar_macro_config.php del hosting.
+4. No sobrescribas las credenciales de base de datos existentes con archivos de ejemplo.
+5. Abre El Radar mediante HTTPS y prueba la instalación desde el navegador.
+6. Si ya existía un Service Worker anterior, elimina los datos del sitio o actualiza el registro
+   desde el navegador y vuelve a cargar la página antes de probar.
+
+La instalación final debe probarse en el dominio real, porque depende del navegador, HTTPS,
+cabeceras y configuración del hosting.
